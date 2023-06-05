@@ -24,12 +24,12 @@ class MainScene {
   update() {
     // Move guy to the right if the right arrow button is pressed
     if (this.arrow.right.isDown) {
-      this.guy.x += 3;
+      this.guy.x += 10;
     }
 
     // Move guy to the left if the left arrow button is pressed
     if (this.arrow.left.isDown) {
-      this.guy.x -= 3;
+      this.guy.x -= 10;
     }
 
     // Put guy on the left of the scene if he crosses the right border
