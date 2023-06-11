@@ -1,6 +1,10 @@
-class MainScene {
+export class MainScene extends Phaser.Scene {
   highestBaguetteY = 0;
   distanceBetweenBaguettes = 150;
+
+  constructor() {
+    super("MainScene");
+  }
 
   // This function is called once - it loads sprites
   preload() {
@@ -55,7 +59,7 @@ class MainScene {
       this.gameOver();
     }
 
-    // Generete a new baguette as soon as the highest baguette is within the view of the camera
+    // Generate a new baguette as soon as the highest baguette is within the view of the camera
     if (this.highestBaguetteY > this.cameras.main.scrollY) {
       this.generateNextBaguette();
     }
@@ -96,31 +100,25 @@ class MainScene {
     baguette.setImmovable();
 
     this.physics.add.collider(this.guy, baguette);
-
-    return baguette;
   }
 
   // Generate a new baguette a bit higher than the current highest baguette
   generateNextBaguette() {
     const randomPositionX = Math.random() * this.cameras.main.width;
+    const positionY = this.highestBaguetteY - this.distanceBetweenBaguettes;
 
-    const baguette = this.createBaguette(
-      randomPositionX,
-      this.highestBaguetteY - this.distanceBetweenBaguettes
-    );
+    this.createBaguette(randomPositionX, positionY);
 
-    this.highestBaguetteY = baguette.y;
+    this.highestBaguetteY = positionY;
   }
 
   // Create a starting baguette in the center of the screen
   generateStartingBaguette() {
     const positionY = this.cameras.main.height - 30;
-    const startingBaguette = this.createBaguette(
-      this.cameras.main.centerX,
-      positionY
-    );
 
-    this.highestBaguetteY = startingBaguette.y;
+    this.createBaguette(this.cameras.main.centerX, positionY);
+
+    this.highestBaguetteY = positionY;
   }
 
   gameOver() {
@@ -128,16 +126,7 @@ class MainScene {
     this.guy.body.checkCollision.down = false;
     this.gameEnded = true;
 
-    this.gameOverText = this.add.text(
-      this.cameras.main.centerX - 130,
-      this.cameras.main.centerY,
-      "Game Over",
-      {
-        fontFamily: "Arial",
-        fontSize: "50px",
-      }
-    );
-    this.gameOverText.scrollFactorY = 0;
+    setTimeout(() => this.scene.start("GameOverScene"), 1000);
   }
 
   createScoreText() {
